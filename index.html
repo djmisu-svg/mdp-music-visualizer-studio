@@ -2,8 +2,8 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MdP Music Visualizer Studio</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MdP RemiX 1&1 - Music Visualizer</title>
 
 <style>
 * {
@@ -12,143 +12,50 @@
 
 body {
   margin: 0;
-  background: #070a14;
+  background: #080d1c;
   color: white;
   font-family: Arial, sans-serif;
   text-align: center;
-}
-
-header {
-  padding: 20px 10px;
-  background: #10182c;
-  border-bottom: 2px solid #178bff;
+  min-height: 100vh;
+  padding: 24px;
 }
 
 h1 {
-  margin: 0;
-  font-size: 26px;
-  color: #ffffff;
+  font-size: clamp(25px,6vw,46px);
+  margin: 18px 0 8px;
 }
 
-.subtitle {
-  color: #83c5ff;
-  margin-top: 8px;
+p {
+  color: #b9c6df;
 }
 
-.stage {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  min-height: 310px;
-  padding: 20px 8px;
-  overflow: hidden;
-  background: radial-gradient(
-    ellipse at center,
-    #19335a 0%,
-    #070a14 70%
-  );
-}
-
-.speaker {
-  width: 115px;
-  height: 230px;
-  flex-shrink: 0;
-  background: linear-gradient(
-    120deg,
-    #343b49,
-    #080a10 45%,
-    #222b3a
-  );
-  border: 4px solid #394355;
-  border-radius: 13px;
-  box-shadow: 0 12px 30px #000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.tweeter {
-  width: 43px;
-  height: 43px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    #141d2b 20%,
-    #020305 40%,
-    #596374 65%,
-    #08090d 75%
-  );
-  border: 3px solid #1c2636;
-}
-
-.woofer {
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    #151e2d 0%,
-    #080b12 37%,
-    #303c50 43%,
-    #020305 60%,
-    #657083 69%,
-    #111620 77%
-  );
-  border: 3px solid #111827;
-  box-shadow: 0 0 10px #000;
-  transform: scale(1);
-  will-change: transform;
-}
-
-.center {
-  width: 125px;
-  flex-shrink: 1;
-}
-
-.logo {
-  font-size: 30px;
-  font-weight: bold;
-  color: #ffffff;
-  text-shadow: 0 0 15px #168bff;
-}
-
-.remix {
-  font-size: 15px;
-  color: #75c6ff;
-  margin-top: 8px;
-}
-
-#status {
-  margin-top: 15px;
-  font-size: 12px;
-  color: #c6d6ed;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: 190px;
-  background: #050811;
-  border-top: 1px solid #263b60;
-  border-bottom: 1px solid #263b60;
-}
-
-.controls {
-  padding: 22px 15px;
-  max-width: 600px;
+.panel {
+  max-width: 850px;
   margin: auto;
 }
 
-input[type="file"] {
+canvas {
   width: 100%;
-  padding: 13px;
-  background: #17243a;
+  height: 300px;
+  display: block;
+  background: linear-gradient(#101b35,#050812);
+  border-radius: 18px;
+  margin: 25px 0;
+}
+
+input {
+  max-width: 100%;
+  margin: 12px;
+}
+
+button {
+  background: #2675df;
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 24px;
   color: white;
-  border: 1px solid #387bc0;
-  border-radius: 9px;
+  font-size: 17px;
+  cursor: pointer;
 }
 
 audio {
@@ -156,21 +63,126 @@ audio {
   margin-top: 20px;
 }
 
-label {
-  display: block;
-  margin-top: 20px;
-  color: #dcecff;
+#status {
+  min-height: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="panel">
+
+<h1>MdP RemiX 1&1</h1>
+
+<p>MUSIC VISUALIZER • DEEP BASS PULSE</p>
+
+<input id="file" type="file" accept="audio/*">
+
+<br>
+
+<button id="start">
+▶ Pornește vizualizatorul
+</button>
+
+<canvas id="visual"></canvas>
+
+<audio id="audio" controls></audio>
+
+<p id="status">
+Alege o melodie de pe dispozitiv.
+</p>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById('visual');
+const ctx = canvas.getContext('2d');
+const audio = document.getElementById('audio');
+const status = document.getElementById('status');
+
+let ac;
+let analyser;
+let source;
+let data;
+let objectURL;
+
+function resize() {
+  canvas.width = canvas.clientWidth * devicePixelRatio;
+  canvas.height = canvas.clientHeight * devicePixelRatio;
 }
 
-input[type="range"] {
-  width: 90%;
-  margin-top: 12px;
-}
+window.addEventListener('resize', resize);
+resize();
 
-footer {
-  color: #8b9db8;
-  font-size: 12px;
-  padding: 25px 10px;
-}
+document.getElementById('file')
+.addEventListener('change', e => {
 
-@
+  const f = e.target.files[0];
+
+  if (!f) return;
+
+  if (objectURL) {
+    URL.revokeObjectURL(objectURL);
+  }
+
+  objectURL = URL.createObjectURL(f);
+  audio.src = objectURL;
+
+  status.textContent =
+    'Încărcat: ' + f.name + ' — apasă Pornește.';
+});
+
+document.getElementById('start')
+.addEventListener('click', async () => {
+
+  if (!audio.src) {
+    status.textContent = 'Mai întâi alege o melodie.';
+    return;
+  }
+
+  try {
+
+    if (!ac) {
+
+      ac = new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+
+      analyser = ac.createAnalyser();
+      analyser.fftSize = 256;
+
+      source = ac.createMediaElementSource(audio);
+
+      source.connect(analyser);
+      analyser.connect(ac.destination);
+
+      data = new Uint8Array(
+        analyser.frequencyBinCount
+      );
+    }
+
+    await ac.resume();
+    await audio.play();
+
+    status.textContent = 'Vizualizator activ';
+
+  } catch (e) {
+
+    status.textContent =
+      'Nu pot porni melodia: ' + e.message;
+
+  }
+
+});
+
+function draw() {
+
+  requestAnimationFrame(draw);
+
+  if (!canvas.width || !canvas.height) return;
+
+  const w = canvas.width;
+  const
