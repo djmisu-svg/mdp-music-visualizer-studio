@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MdP Music Visualizer Studio</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #070a14;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+header {
+  padding: 20px 10px;
+  background: #10182c;
+  border-bottom: 2px solid #178bff;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #ffffff;
+}
+
+.subtitle {
+  color: #83c5ff;
+  margin-top: 8px;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  min-height: 310px;
+  padding: 20px 8px;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at center,
+    #19335a 0%,
+    #070a14 70%
+  );
+}
+
+.speaker {
+  width: 115px;
+  height: 230px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    120deg,
+    #343b49,
+    #080a10 45%,
+    #222b3a
+  );
+  border: 4px solid #394355;
+  border-radius: 13px;
+  box-shadow: 0 12px 30px #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.tweeter {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #141d2b 20%,
+    #020305 40%,
+    #596374 65%,
+    #08090d 75%
+  );
+  border: 3px solid #1c2636;
+}
+
+.woofer {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #151e2d 0%,
+    #080b12 37%,
+    #303c50 43%,
+    #020305 60%,
+    #657083 69%,
+    #111620 77%
+  );
+  border: 3px solid #111827;
+  box-shadow: 0 0 10px #000;
+  transform: scale(1);
+  will-change: transform;
+}
+
+.center {
+  width: 125px;
+  flex-shrink: 1;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 0 0 15px #168bff;
+}
+
+.remix {
+  font-size: 15px;
+  color: #75c6ff;
+  margin-top: 8px;
+}
+
+#status {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #c6d6ed;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 190px;
+  background: #050811;
+  border-top: 1px solid #263b60;
+  border-bottom: 1px solid #263b60;
+}
+
+.controls {
+  padding: 22px 15px;
+  max-width: 600px;
+  margin: auto;
+}
+
+input[type="file"] {
+  width: 100%;
+  padding: 13px;
+  background: #17243a;
+  color: white;
+  border: 1px solid #387bc0;
+  border-radius: 9px;
+}
+
+audio {
+  width: 100%;
+  margin-top: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 20px;
+  color: #dcecff;
+}
+
+input[type="range"] {
+  width: 90%;
+  margin-top: 12px;
+}
+
+footer {
+  color: #8b9db8;
+  font-size: 12px;
+  padding: 25px 10px;
+}
+
+@
